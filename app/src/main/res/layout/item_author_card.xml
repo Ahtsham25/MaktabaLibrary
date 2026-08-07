@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="6dp"
@@ -13,8 +15,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         app:cardCornerRadius="8dp"
-        app:cardElevation="0dp"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        app:cardElevation="0dp">
 
         <ImageView
             android:id="@+id/image_cover"
@@ -38,8 +39,7 @@
             android:textColor="@color/text_primary"
             android:textSize="16sp"
             android:textStyle="bold"
-            tools:text="مکتبہ مولانا اعجاز احمد اعظمیؒ"
-            xmlns:tools="http://schemas.android.com/tools" />
+            tools:text="مکتبہ مولانا اعجاز احمد اعظمیؒ" />
 
         <TextView
             android:id="@+id/text_count"
