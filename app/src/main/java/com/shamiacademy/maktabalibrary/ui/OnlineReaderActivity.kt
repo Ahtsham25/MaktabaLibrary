@@ -17,12 +17,14 @@ class OnlineReaderActivity : AppCompatActivity() {
     companion object {
         private const val EX_URL = "url"
         private const val EX_TITLE = "title"
+
         fun start(context: Context, url: String, title: String) {
-            context.startActivity(
-                Intent(context, OnlineReaderActivity::class.java)
-                    .putExtra(EX_URL, url)
-                    .putExtra(EX_TITLE, title)
-            )
+            val intent = Intent(context, OnlineReaderActivity::class.java).apply {
+                putExtra(EX_URL, url)
+                putExtra(EX_TITLE, title)
+                setPackage(context.packageName)
+            }
+            context.startActivity(intent)
         }
     }
 
@@ -36,7 +38,14 @@ class OnlineReaderActivity : AppCompatActivity() {
         makeFullscreen()
         setContentView(R.layout.activity_online_reader)
 
-        val url = intent.getStringExtra(EX_URL) ?: ""
+        val rawUrl = intent.getStringExtra(EX_URL) ?: ""
+
+        // آرکائیو کے ڈسکرپشن پیج کے بجائے صرف فل اسکرین ایٹمبیڈ ریڈر میں تبدیل کرنے کا کوڈ
+        val formattedUrl = if (rawUrl.contains("archive.org/details/")) {
+            rawUrl.replace("archive.org/details/", "archive.org/embed/")
+        } else {
+            rawUrl
+        }
 
         findViewById<View>(R.id.btn_back).setOnClickListener { finish() }
 
@@ -46,13 +55,15 @@ class OnlineReaderActivity : AppCompatActivity() {
         webView.settings.domStorageEnabled = true
         webView.settings.loadWithOverviewMode = true
         webView.settings.useWideViewPort = true
+        
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
                 progress.visibility = View.GONE
             }
         }
-        webView.loadUrl(url)
+        
+        webView.loadUrl(formattedUrl)
     }
 
     private fun makeFullscreen() {
