@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background_black">#0A0A0A</color>
+    <color name="surface_black">#141210</color>
+    <color name="card_black">#1A1714</color>
+
+    <color name="gold_light">#F5D98B</color>
+    <color name="gold">#D4AF37</color>
+    <color name="gold_deep">#9B7B23</color>
+    <color name="gold_glow">#FFE9B0</color>
+
+    <color name="text_primary">#F5EFE0</color>
+    <color name="text_secondary">#C9BFA5</color>
+    <color name="text_muted">#8A806E</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
+    <color name="downloaded_tick">#3AA0FF</color>
+</resources>
