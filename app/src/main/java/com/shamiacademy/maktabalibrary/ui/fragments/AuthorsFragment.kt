@@ -1,4 +1,3 @@
-
 package com.shamiacademy.maktabalibrary.ui.fragments
 
 import android.os.Bundle
@@ -28,9 +27,12 @@ class AuthorsFragment : Fragment(R.layout.fragment_authors) {
         val search = view.findViewById<android.widget.EditText>(R.id.edit_search)
         val progress = view.findViewById<android.widget.ProgressBar>(R.id.progress)
 
-        // requireContext() کے بجائے requireActivity() پاس کیا گیا ہے
         adapter = AuthorAdapter(emptyList()) { maktaba ->
-            AuthorBooksActivity.start(requireActivity(), maktaba.id)
+            // اگر ID نل نہیں ہے تبھی ایکٹیویٹی سٹارٹ کرے گا
+            val authorId = maktaba.id
+            if (!authorId.isNullOrEmpty()) {
+                AuthorBooksActivity.start(requireActivity(), authorId)
+            }
         }
         recycler.layoutManager = LinearLayoutManager(requireContext())
         recycler.adapter = adapter
@@ -46,8 +48,8 @@ class AuthorsFragment : Fragment(R.layout.fragment_authors) {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val q = s?.toString()?.trim().orEmpty()
-                val filtered = if (q.isEmpty()) allAuthors else allAuthors.filter {
-                    it.nameUr.contains(q, ignoreCase = true)
+                val filtered = if (q.isEmpty()) allAuthors else allAuthors.filter { author ->
+                    author.nameUr?.contains(q, ignoreCase = true) == true
                 }
                 adapter.updateData(filtered)
             }
