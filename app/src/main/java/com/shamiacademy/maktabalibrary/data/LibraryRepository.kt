@@ -19,7 +19,7 @@ import java.io.File
 object LibraryRepository {
 
     private const val RAW_JSON_URL =
-        "https://raw.githubusercontent.com/REPLACE_ME/REPLACE_ME/main/data/authors.json"
+        "https://raw.githubusercontent.com/Ahtsham25/MaktabaLibrary/main/data/authors.json"
 
     private val client = OkHttpClient()
     private var cache: List<Maktaba>? = null
