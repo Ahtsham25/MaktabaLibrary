@@ -1,3 +1,4 @@
+
 package com.shamiacademy.maktabalibrary.ui.fragments
 
 import android.os.Bundle
@@ -27,8 +28,9 @@ class AuthorsFragment : Fragment(R.layout.fragment_authors) {
         val search = view.findViewById<android.widget.EditText>(R.id.edit_search)
         val progress = view.findViewById<android.widget.ProgressBar>(R.id.progress)
 
+        // requireContext() کے بجائے requireActivity() پاس کیا گیا ہے
         adapter = AuthorAdapter(emptyList()) { maktaba ->
-            AuthorBooksActivity.start(requireContext(), maktaba.id)
+            AuthorBooksActivity.start(requireActivity(), maktaba.id)
         }
         recycler.layoutManager = LinearLayoutManager(requireContext())
         recycler.adapter = adapter
