@@ -1,74 +1,47 @@
-package com.shamiacademy.maktabalibrary.ui
+package com.shamiacademy.maktabalibrary.adapter
 
-import android.content.Context
-import android.content.Intent
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.shamiacademy.maktabalibrary.R
-import com.shamiacademy.maktabalibrary.adapter.BookGridAdapter
-import com.shamiacademy.maktabalibrary.data.AppDatabase
-import com.shamiacademy.maktabalibrary.data.FlatBook
-import com.shamiacademy.maktabalibrary.data.LibraryRepository
-import kotlinx.coroutines.launch
+import com.shamiacademy.maktabalibrary.data.Maktaba
 
-class AuthorBooksActivity : AppCompatActivity() {
+class AuthorAdapter(
+    private var items: List<Maktaba>,
+    private val onClick: (Maktaba) -> Unit
+) : RecyclerView.Adapter<AuthorAdapter.VH>() {
 
-    companion object {
-        private const val EXTRA_MAKTABA_ID = "maktaba_id"
-
-        fun start(context: Context, maktabaId: String) {
-            val intent = Intent(context, AuthorBooksActivity::class.java).apply {
-                putExtra(EXTRA_MAKTABA_ID, maktabaId)
-                setPackage(context.packageName)
-            }
-            context.startActivity(intent)
-        }
+    class VH(view: View) : RecyclerView.ViewHolder(view) {
+        val image: ImageView = view.findViewById(R.id.image_cover)
+        val title: TextView = view.findViewById(R.id.text_title)
     }
 
-    private lateinit var adapter: BookGridAdapter
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
+        val v = LayoutInflater.from(parent.context).inflate(R.layout.item_author_card, parent, false)
+        return VH(v)
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_author_books)
+    override fun onBindViewHolder(holder: VH, position: Int) {
+        val item = items[position]
+        holder.title.text = item.nameUr
 
-        val maktabaId = intent.getStringExtra(EXTRA_MAKTABA_ID) ?: return finish()
-        val recycler = findViewById<RecyclerView>(R.id.recycler_books)
-        val progress = findViewById<android.widget.ProgressBar>(R.id.progress)
-        val titleView = findViewById<android.widget.TextView>(R.id.text_title)
-        findViewById<android.view.View>(R.id.btn_back).setOnClickListener { finish() }
+        Glide.with(holder.image.context)
+            .load(item.coverImageUrl)
+            .placeholder(R.color.surface_black)
+            .centerCrop()
+            .into(holder.image)
 
-        adapter = BookGridAdapter(emptyList(), emptyMap(), lifecycleScope) { flat ->
-            BookOptionsActivity.start(this, flat)
-        }
-        recycler.layoutManager = GridLayoutManager(this, 2)
-        recycler.adapter = adapter
+        holder.itemView.setOnClickListener { onClick(item) }
+    }
 
-        progress.visibility = android.view.View.VISIBLE
-        lifecycleScope.launch {
-            val maktabas = LibraryRepository.getMaktabas(this@AuthorBooksActivity)
-            val maktaba = maktabas.find { it.id == maktabaId }
-            titleView.text = maktaba?.nameUr ?: ""
+    override fun getItemCount(): Int = items.size
 
-            val flatBooks: List<FlatBook> = maktaba?.books?.map { book ->
-                // آرکائیو کے pdfDownloadUrl سے ٹائٹل امیج بنانا
-                val bookCover = if (book.pdfDownloadUrl.contains("archive.org")) {
-                    book.pdfDownloadUrl
-                        .replace("/details/", "/download/")
-                        .replace("/stream/", "/download/") + "_page_0001.jpg"
-                } else {
-                    maktaba.coverImageUrl
-                }
-                FlatBook(maktaba.nameUr, maktaba.id, bookCover, book)
-            } ?: emptyList()
-
-            adapter.updateData(flatBooks)
-            progress.visibility = android.view.View.GONE
-
-            val downloaded = AppDatabase.get(this@AuthorBooksActivity).downloadedBookDao().getAllOnce()
-            adapter.updateDownloadedMap(downloaded.associate { it.uid to it.localFilePath })
-        }
+    fun updateData(newItems: List<Maktaba>) {
+        items = newItems
+        notifyDataSetChanged()
     }
 }
