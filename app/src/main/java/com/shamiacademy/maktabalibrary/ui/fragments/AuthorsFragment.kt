@@ -1,46 +1,55 @@
 package com.shamiacademy.maktabalibrary.ui.fragments
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.shamiacademy.maktabalibrary.R
-import com.shamiacademy.maktabalibrary.ui.WebPageActivity
+import com.shamiacademy.maktabalibrary.adapter.AuthorAdapter
+import com.shamiacademy.maktabalibrary.data.LibraryRepository
+import com.shamiacademy.maktabalibrary.data.Maktaba
+import com.shamiacademy.maktabalibrary.ui.AuthorBooksActivity
+import kotlinx.coroutines.launch
 
-class MoreFragment : Fragment(R.layout.fragment_more) {
+class AuthorsFragment : Fragment(R.layout.fragment_authors) {
+
+    private var allAuthors: List<Maktaba> = emptyList()
+    private lateinit var adapter: AuthorAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.findViewById<View>(R.id.item_about).setOnClickListener {
-            WebPageActivity.start(
-                requireContext(),
-                getString(R.string.about_app),
-                "شامی اکیڈمی\n\nیہ ایپلیکیشن علماء کرام کی کتابوں کو ایک ہی جگہ، آسان اور خوبصورت انداز میں پیش کرنے کے لیے تیار کی گئی ہے۔ تمام کتابیں Internet Archive سے حاصل کی گئی ہیں اور تعلیمی و دینی مقاصد کے لیے پیش کی جا رہی ہیں۔"
-            )
+        val recycler = view.findViewById<RecyclerView>(R.id.recycler_authors)
+        val search = view.findViewById<android.widget.EditText>(R.id.edit_search)
+        val progress = view.findViewById<android.widget.ProgressBar>(R.id.progress)
+
+        adapter = AuthorAdapter(emptyList()) { maktaba ->
+            AuthorBooksActivity.start(requireContext(), maktaba.id)
         }
-        view.findViewById<View>(R.id.item_privacy).setOnClickListener {
-            WebPageActivity.start(
-                requireContext(),
-                getString(R.string.privacy_policy),
-                "پرائیویسی پالیسی\n\nیہ ایپ آپ کی کوئی ذاتی معلومات جمع نہیں کرتی۔ کتابیں براہ راست Internet Archive کے سرورز سے پڑھی یا ڈاؤن لوڈ کی جاتی ہیں۔ ڈاؤن لوڈ شدہ کتابیں صرف آپ کے اپنے آلے پر محفوظ ہوتی ہیں۔"
-            )
+        recycler.layoutManager = LinearLayoutManager(requireContext())
+        recycler.adapter = adapter
+
+        progress.visibility = View.VISIBLE
+        viewLifecycleOwner.lifecycleScope.launch {
+            allAuthors = LibraryRepository.getMaktabas(requireContext())
+            adapter.updateData(allAuthors)
+            progress.visibility = View.GONE
         }
-        view.findViewById<View>(R.id.item_disclaimer).setOnClickListener {
-            WebPageActivity.start(
-                requireContext(),
-                getString(R.string.disclaimer),
-                "ڈسکلیمر\n\nاس ایپ میں موجود تمام کتابیں Internet Archive پر پہلے سے موجود عوامی مواد سے لی گئی ہیں۔ ایپ کا مقصد صرف رسائی کو آسان بنانا ہے۔ کسی بھی مسئلے کی صورت میں براہ کرم رابطہ کریں۔"
-            )
-        }
-        view.findViewById<View>(R.id.item_contact).setOnClickListener {
-            WebPageActivity.start(
-                requireContext(),
-                getString(R.string.contact_us),
-                "رابطہ کریں\n\nکسی بھی سوال، تجویز یا مسئلے کے لیے آپ ہم سے رابطہ کر سکتے ہیں۔"
-            )
-        }
-        view.findViewById<View>(R.id.item_crash_logs).setOnClickListener {
-            com.shamiacademy.maktabalibrary.ui.CrashLogsActivity.start(requireContext())
-        }
+
+        search.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val q = s?.toString()?.trim().orEmpty()
+                val filtered = if (q.isEmpty()) allAuthors else allAuthors.filter {
+                    it.nameUr.contains(q, ignoreCase = true)
+                }
+                adapter.updateData(filtered)
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
     }
 }
