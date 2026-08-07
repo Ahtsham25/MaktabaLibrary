@@ -22,7 +22,6 @@ class AuthorBooksActivity : AppCompatActivity() {
         fun start(context: Context, maktabaId: String) {
             val intent = Intent(context, AuthorBooksActivity::class.java).apply {
                 putExtra(EXTRA_MAKTABA_ID, maktabaId)
-                // پیکیج کا نام فکس کرنے کے لیے تاکہ ڈبل پاتھ کا ایرر نہ آئے
                 setPackage(context.packageName)
             }
             context.startActivity(intent)
@@ -52,9 +51,19 @@ class AuthorBooksActivity : AppCompatActivity() {
             val maktabas = LibraryRepository.getMaktabas(this@AuthorBooksActivity)
             val maktaba = maktabas.find { it.id == maktabaId }
             titleView.text = maktaba?.nameUr ?: ""
-            val flatBooks: List<FlatBook> = maktaba?.books?.map {
-                FlatBook(maktaba.nameUr, maktaba.id, maktaba.coverImageUrl, it)
+
+            val flatBooks: List<FlatBook> = maktaba?.books?.map { book ->
+                // آٹو امیج لاجک: اگر JSON میں الگ تصویر نہیں ہے تو URL کے ذریعے پیج 1 کی تصویر بن جائے گی
+                val bookCover = when {
+                    !book.coverImageUrl.isNullOrEmpty() -> book.coverImageUrl
+                    book.url.contains("archive.org") && book.url.contains(".pdf") -> {
+                        book.url.replace("/details/", "/download/") + "_page_0001.jpg"
+                    }
+                    else -> maktaba.coverImageUrl
+                }
+                FlatBook(maktaba.nameUr, maktaba.id, bookCover, book)
             } ?: emptyList()
+
             adapter.updateData(flatBooks)
             progress.visibility = android.view.View.GONE
 
