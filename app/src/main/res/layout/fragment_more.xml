@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background_black"
+    android:padding="12dp">
+
+    <TextView
+        android:id="@+id/item_about"
+        style="@style/MoreListItem"
+        android:text="@string/about_app" />
+
+    <TextView
+        android:id="@+id/item_privacy"
+        style="@style/MoreListItem"
+        android:text="@string/privacy_policy" />
+
+    <TextView
+        android:id="@+id/item_disclaimer"
+        style="@style/MoreListItem"
+        android:text="@string/disclaimer" />
+
+    <TextView
+        android:id="@+id/item_contact"
+        style="@style/MoreListItem"
+        android:text="@string/contact_us" />
+
+    <TextView
+        android:id="@+id/item_crash_logs"
+        style="@style/MoreListItem"
+        android:text="کریش لاگز (اگر ایپ بند ہو جائے)" />
+
+</LinearLayout>
