@@ -53,13 +53,13 @@ class AuthorBooksActivity : AppCompatActivity() {
             titleView.text = maktaba?.nameUr ?: ""
 
             val flatBooks: List<FlatBook> = maktaba?.books?.map { book ->
-                // آٹو امیج لاجک: اگر JSON میں الگ تصویر نہیں ہے تو URL کے ذریعے پیج 1 کی تصویر بن جائے گی
-                val bookCover = when {
-                    !book.coverImageUrl.isNullOrEmpty() -> book.coverImageUrl
-                    book.url.contains("archive.org") && book.url.contains(".pdf") -> {
-                        book.url.replace("/details/", "/download/") + "_page_0001.jpg"
-                    }
-                    else -> maktaba.coverImageUrl
+                // pdfDownloadUrl کے ذریعے تصویر کا لنک بنانا
+                val bookCover = if (book.pdfDownloadUrl.contains("archive.org")) {
+                    book.pdfDownloadUrl
+                        .replace("/details/", "/download/")
+                        .replace("/stream/", "/download/") + "_page_0001.jpg"
+                } else {
+                    maktaba.coverImageUrl
                 }
                 FlatBook(maktaba.nameUr, maktaba.id, bookCover, book)
             } ?: emptyList()
