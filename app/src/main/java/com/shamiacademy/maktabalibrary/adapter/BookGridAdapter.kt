@@ -8,14 +8,18 @@ import com.bumptech.glide.Glide
 import com.shamiacademy.maktabalibrary.R
 import com.shamiacademy.maktabalibrary.data.FlatBook
 import com.shamiacademy.maktabalibrary.util.PdfThumbnailUtil
+import com.shamiacademy.maktabalibrary.util.TempThumbnailUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 /**
  * uidToLocalPath: map of downloaded book.uid -> local pdf file path.
- * When a book is present here, its own first-page render is shown as the
- * thumbnail. Otherwise the maktaba's shared cover image is used.
+ * - Downloaded books: thumbnail rendered from the local file.
+ * - Not-yet-downloaded books: thumbnail generated via TempThumbnailUtil
+ *   (fetches the PDF once, renders page 1, caches the image, deletes the
+ *   temporary PDF). The maktaba's shared cover is shown briefly as a
+ *   placeholder while that happens.
  */
 class BookGridAdapter(
     private var items: List<FlatBook>,
@@ -59,6 +63,11 @@ class BookGridAdapter(
                 .placeholder(R.color.surface_black)
                 .centerCrop()
                 .into(holder.image)
+
+            holder.job = scope.launch {
+                val bmp = TempThumbnailUtil.getThumbnail(holder.image.context, item.book.pdfDownloadUrl)
+                if (bmp != null) holder.image.setImageBitmap(bmp)
+            }
         }
 
         holder.itemView.setOnClickListener { onClick(item) }
