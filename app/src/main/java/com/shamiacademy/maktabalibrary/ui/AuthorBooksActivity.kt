@@ -18,11 +18,14 @@ class AuthorBooksActivity : AppCompatActivity() {
 
     companion object {
         private const val EXTRA_MAKTABA_ID = "maktaba_id"
+
         fun start(context: Context, maktabaId: String) {
-            context.startActivity(
-                Intent(context, AuthorBooksActivity::class.java)
-                    .putExtra(EXTRA_MAKTABA_ID, maktabaId)
-            )
+            val intent = Intent(context, AuthorBooksActivity::class.java).apply {
+                putExtra(EXTRA_MAKTABA_ID, maktabaId)
+                // پیکیج کا نام فکس کرنے کے لیے تاکہ ڈبل پاتھ کا ایرر نہ آئے
+                setPackage(context.packageName)
+            }
+            context.startActivity(intent)
         }
     }
 
