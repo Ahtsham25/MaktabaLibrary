@@ -28,6 +28,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".ui.AuthorBooksActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".ui.BookOptionsActivity"
             android:exported="false" />
 
