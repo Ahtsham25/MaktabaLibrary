@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_books"
+        android:icon="@drawable/ic_books"
+        android:title="@string/nav_books" />
+    <item
+        android:id="@+id/nav_authors"
+        android:icon="@drawable/ic_authors"
+        android:title="@string/nav_authors" />
+    <item
+        android:id="@+id/nav_downloads"
+        android:icon="@drawable/ic_downloads"
+        android:title="@string/nav_downloads" />
+    <item
+        android:id="@+id/nav_more"
+        android:icon="@drawable/ic_more"
+        android:title="@string/nav_more" />
+</menu>
