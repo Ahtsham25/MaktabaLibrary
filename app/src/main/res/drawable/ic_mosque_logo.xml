@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+
+    <!-- glow circle -->
+    <path
+        android:fillColor="#22D4AF37"
+        android:pathData="M100,100 m-95,0 a95,95 0 1,0 190,0 a95,95 0 1,0 -190,0" />
+
+    <!-- ground line -->
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M20,160 L180,160 L180,166 L20,166 Z" />
+
+    <!-- left minaret -->
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M34,160 L34,90 L40,90 L40,160 Z" />
+    <path
+        android:fillColor="#F5D98B"
+        android:pathData="M31,90 L43,90 L37,78 Z" />
+
+    <!-- right minaret -->
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M160,160 L160,90 L166,90 L166,160 Z" />
+    <path
+        android:fillColor="#F5D98B"
+        android:pathData="M157,90 L169,90 L163,78 Z" />
+
+    <!-- main building block -->
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M55,160 L55,120 L145,120 L145,160 Z" />
+
+    <!-- central dome -->
+    <path
+        android:fillColor="#F5D98B"
+        android:pathData="M70,120 C70,95 90,80 100,80 C110,80 130,95 130,120 Z" />
+
+    <!-- dome finial -->
+    <path
+        android:fillColor="#F5D98B"
+        android:pathData="M99,80 L101,80 L101,68 L104,68 L104,65 L96,65 L96,68 L99,68 Z" />
+
+    <!-- door arch -->
+    <path
+        android:fillColor="#0A0A0A"
+        android:pathData="M92,160 L92,138 C92,131 108,131 108,138 L108,160 Z" />
+
+    <!-- small side arches -->
+    <path
+        android:fillColor="#0A0A0A"
+        android:pathData="M62,160 L62,144 C62,139 72,139 72,144 L72,160 Z" />
+    <path
+        android:fillColor="#0A0A0A"
+        android:pathData="M128,160 L128,144 C128,139 138,139 138,144 L138,160 Z" />
+
+</vector>
