@@ -1,6 +1,7 @@
 package com.shamiacademy.maktabalibrary.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.lifecycle.LifecycleCoroutineScope
@@ -17,14 +18,15 @@ class PdfPageAdapter(
     private val pageWidthPx: Int
 ) : RecyclerView.Adapter<PdfPageAdapter.VH>() {
 
-    class VH(val image: ImageView) : RecyclerView.ViewHolder(image) {
+    class VH(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val image: ImageView = itemView.findViewById(R.id.image_page)
         var job: Job? = null
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_pdf_page, parent, false)
-        return VH(view.findViewById(R.id.image_page))
+        return VH(view)
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
